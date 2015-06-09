@@ -61,7 +61,6 @@ b = vim.current.buffer
 defined_proj = vim.eval("get(g:, 'fsharp_proj', 0)")
 if defined_proj != '0':
     proj_file = os.path.join(os.getcwd(), defined_proj)
-    print "proj: %s" % proj_file
     vim.command("let b:proj_file = '%s'" % proj_file)
     G.fsac.project(proj_file)
 else:
