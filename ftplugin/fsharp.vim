@@ -58,14 +58,21 @@ if G.fsi == None:
 
 #find project file if any - assumes fsproj file will be in the same directory as the fs or fsi file
 b = vim.current.buffer
-x,ext = os.path.splitext(b.name)
-if '.fs' == ext or '.fsi' == ext:
-    dir = os.path.dirname(os.path.realpath(b.name))
-    projs = filter(lambda f: '.fsproj' == os.path.splitext(f)[1], os.listdir(dir))
-    if len(projs):
-        proj_file = os.path.join(dir, projs[0])
-        vim.command("let b:proj_file = '%s'" % proj_file)
-        G.fsac.project(proj_file)
+defined_proj = vim.eval("get(g:, 'fsharp_proj', 0)")
+if defined_proj != '0':
+    proj_file = os.path.join(os.getcwd(), defined_proj)
+    print "proj: %s" % proj_file
+    vim.command("let b:proj_file = '%s'" % proj_file)
+    G.fsac.project(proj_file)
+else:
+    x,ext = os.path.splitext(b.name)
+    if '.fs' == ext or '.fsi' == ext:
+        dir = os.path.dirname(os.path.realpath(b.name))
+        projs = filter(lambda f: '.fsproj' == os.path.splitext(f)[1], os.listdir(dir))
+        if len(projs):
+            proj_file = os.path.join(dir, projs[0])
+            vim.command("let b:proj_file = '%s'" % proj_file)
+            G.fsac.project(proj_file)
 G.fsac.parse(b.name, True, b)
 EOF
 
